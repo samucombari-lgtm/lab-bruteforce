@@ -1,0 +1,144 @@
+/*
+ * Feuille de style de la cible brute force.
+ * CSS simple et lisible, sans framework, comme demandé par le cahier des charges.
+ */
+
+:root {
+    --couleur-fond: #f4f5f7;
+    --couleur-texte: #1f2933;
+    --couleur-bloc: #ffffff;
+    --couleur-bordure: #d6dae0;
+    --couleur-accent: #2563eb;
+    --couleur-danger: #b91c1c;
+    --couleur-danger-fond: #fde8e8;
+    --couleur-succes: #166534;
+    --couleur-succes-fond: #e6f4ea;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--couleur-fond);
+    color: var(--couleur-texte);
+    line-height: 1.5;
+}
+
+/* Bandeau d'avertissement, présent sur toutes les pages */
+.bandeau-avertissement {
+    background: var(--couleur-danger);
+    color: #ffffff;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.bandeau-avertissement .mode-actif {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.25);
+    font-size: 0.85rem;
+}
+
+.contenu {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.bloc {
+    background: var(--couleur-bloc);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+button {
+    background: var(--couleur-accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.55rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(0.95);
+}
+
+.message-erreur {
+    background: var(--couleur-danger-fond);
+    color: var(--couleur-danger);
+    border: 1px solid var(--couleur-danger);
+    border-radius: 6px;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--couleur-bordure);
+    font-size: 0.95rem;
+}
+
+.etat-succes {
+    color: var(--couleur-succes);
+    background: var(--couleur-succes-fond);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+}
+
+.etat-echec {
+    color: var(--couleur-danger);
+    background: var(--couleur-danger-fond);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+}
+
+.liens {
+    margin-top: 1rem;
+}
+
+.liens a {
+    color: var(--couleur-accent);
+    text-decoration: none;
+    margin-right: 1rem;
+}
