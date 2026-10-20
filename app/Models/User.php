@@ -2,48 +2,76 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
+/**
+ * Compte utilisateur de la cible.
+ *
+ * L'identifiant de connexion est 'username' (et non un email) : l'application
+ * se limite à un formulaire identifiant + mot de passe.
+ *
+ * Les colonnes 'failed_attempts' et 'locked_until' ne sont utilisées qu'en
+ * Mode B (protégé) pour verrouiller temporairement un compte attaqué.
+ */
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
+        'failed_attempts',
+        'locked_until',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
+     * Masqué lors de la sérialisation (par exemple en JSON).
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * 'hashed' fait hacher automatiquement le mot de passe à l'écriture :
+     * on n'enregistre donc jamais de mot de passe en clair en base.
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'locked_until' => 'datetime',
         ];
+    }
+
+    /**
+     * Indique si le compte est verrouillé à l'instant présent (Mode B).
+     */
+    public function estVerrouille(): bool
+    {
+        return $this->locked_until !== null && $this->locked_until->isFuture();
+    }
+
+    /**
+     * Enregistre un échec de connexion et verrouille le compte si le seuil
+     * configuré est atteint (Mode B uniquement).
+     */
+    public function enregistrerEchec(int $seuilVerrouillage, int $dureeVerrouillageMinutes): void
+    {
+        $this->failed_attempts++;
+
+        if ($this->failed_attempts >= $seuilVerrouillage) {
+            $this->locked_until = Carbon::now()->addMinutes($dureeVerrouillageMinutes);
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Remet le compteur d'échecs à zéro après une connexion réussie (Mode B).
+     */
+    public function reinitialiserEchecs(): void
+    {
+        $this->failed_attempts = 0;
+        $this->locked_until = null;
+        $this->save();
     }
 }
